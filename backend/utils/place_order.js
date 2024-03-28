@@ -31,14 +31,14 @@ const calculate_price = (
     tax = 0;
 
   if (state !== "") {
-    charges = Charges[`${state}`];
+    charges = (`${state}` in Charges) ? Charges[`${state}`] : charges;
   }
   if (start_date !== "" && end_date !== "") {
     days = number_of_days(start_date, end_date);
   }
   tax = charges[`${key}`] * days;
 
-  let service_charge;
+  let service_charge = 0;
   if (tax_type === "road_tax") {
     service_charge = 200; // in case of yearly
     if (tax_mode === "Monthly" || tax_mode === "Quaterly") {
@@ -92,7 +92,7 @@ const send_whatsapp_message = (contact_number, data) => {
     })
     .then((message) =>
       console.log(
-        `Message sent successfully to admin. Contact Number ${contact_number} - Message SId ${message.sid}`
+        `Message sent successfully to admin. Contact Number ${process.env.ADMIN_CONTACT_NUMBER} - Message SId ${message.sid}`
       )
     )
     .catch((error) =>
